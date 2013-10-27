@@ -295,14 +295,14 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 				NfcService = findClass(Common.PACKAGE_NFC + ".LNfcService", lpparam.classLoader);
 				mIsOemStupid = true;
 			} catch (ClassNotFoundError e) {
-				e.printStackTrace();
+
 			}
 
 			if (NfcService == null) {
 				try {
 					NfcService = findClass(Common.PACKAGE_NFC + ".NfcService", lpparam.classLoader);
 				} catch (ClassNotFoundError e) {
-					// Shouldn't happen
+					e.printStackTrace();
 				}
 			}
 
