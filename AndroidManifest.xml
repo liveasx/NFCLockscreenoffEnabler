@@ -51,7 +51,7 @@
             android:value="2.0*" />
         <meta-data
             android:name="xposeddescription"
-            android:value="Enable NFC when the screen is off, and use NFC to unlock your device" />
+            android:value="@string/xposed_description" />
     </application>
 
 </manifest>
