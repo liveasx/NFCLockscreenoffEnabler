@@ -23,7 +23,11 @@ import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.InputType;
@@ -170,20 +174,19 @@ public class NfcTags extends Activity implements UndoListener {
 		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
 				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-		IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-		try {
-			ndef.addDataType("*/*");    /* Handles all MIME based dispatches. 
-                                           You should specify only the ones that you need. */
-			ndef.addDataScheme("http");
-		}
-		catch (MalformedMimeTypeException e) {
-			throw new RuntimeException("fail", e);
-		}
-		mIntentFiltersArray = new IntentFilter[] {ndef};
+		IntentFilter tech = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
+		
+		mIntentFiltersArray = new IntentFilter[] {tech};
 		mTechListsArray = new String[][] {
-			new String[] { IsoDep.class.getName(), Ndef.class.getName(), NfcA.class.getName()},
-			new String[] { MifareUltralight.class.getName(), Ndef.class.getName(), NfcA.class.getName()},
-			new String[] { MifareClassic.class.getName(), Ndef.class.getName(), NfcA.class.getName()}
+				new String[] { NfcA.class.getName() },
+				new String[] { NfcB.class.getName() },
+				new String[] { NfcF.class.getName() },
+				new String[] { NfcV.class.getName() },
+				new String[] { IsoDep.class.getName() },
+				new String[] { MifareClassic.class.getName() },
+				new String[] { MifareUltralight.class.getName() },
+				new String[] { NdefFormatable.class.getName() },
+				new String[] { Ndef.class.getName() } 
 		};
 
 		mAlreadySetup = true;
