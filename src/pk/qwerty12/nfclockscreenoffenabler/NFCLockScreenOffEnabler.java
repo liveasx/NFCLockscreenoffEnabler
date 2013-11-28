@@ -646,11 +646,16 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 						e.printStackTrace();
 					}
 				} else if (Common.INTENT_UNLOCK_INTERCEPTED.equals(intent.getAction())) {
+					String notificationText = "An attempt to use an intent used by NFC unlocking to unlock your device has been prevented";
 					Notification.Builder mBuilder = new Notification.Builder(context)
 					.setSmallIcon(android.R.drawable.ic_dialog_alert)
 					.setContentTitle("Unlock attempt intercepted")
-					.setContentText("An attempt to use an intent used by NFC unlocking to unlock your device has been prevented")
+					.setContentText(notificationText)
 					.setAutoCancel(true);
+					/* We don't have the support library, and the message barely fits on most devices */
+					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+						mBuilder.setStyle(new Notification.BigTextStyle().bigText(notificationText));
+					}
 					NotificationManager mNotificationManager =
 							(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 					mNotificationManager.notify(0, mBuilder.build());
