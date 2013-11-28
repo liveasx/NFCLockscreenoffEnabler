@@ -16,27 +16,12 @@
     <string name="copyright_summary">版权所有 © 2012-2013 – qwerty12\n点击查看参与者</string>
 	<string name="xposed_description">当屏幕熄灭时启用NFC，并且使用NFC解锁你的设备。</string>
     
-    <string-array name="contributors" translatable="false">
-        <item>qwerty12</item>
-        <item>madfish73</item>
-        <item>MohammadAG</item>
-        <item>sleavitt</item>
-        <item>vrthe1</item>
-    </string-array>
-    
     <string-array name="contributors_how">
     	<item>主要开发者</item>
     	<item>标签丢失支持</item>
     	<item>标签解锁/微调</item>    
     	<item>TecTile和4.1支持</item>
     	<item>HTC One支持</item>
-    </string-array>
-    
-	<!-- Translators, add your names here so you're credited in the app -->
-    <string-array name="translators" translatable="false">
-        <item>qhq (Chinese / 简体中文)</item>
-        <item>liveasx (Chinese / 汉语)</item>
-        <item>etatto (French / Français)</item>
     </string-array>
 
     <string name="contributors_title">参与者</string>
