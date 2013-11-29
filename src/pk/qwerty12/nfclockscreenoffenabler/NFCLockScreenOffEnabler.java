@@ -25,6 +25,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.XModuleResources;
 import android.media.SoundPool;
 import android.nfc.NfcAdapter;
+import android.os.PowerManager;
 import android.util.Log;
 import de.robv.android.xposed.IXposedHookCmdInit;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -69,6 +70,8 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 
 	private static Object mKeyguardSecurityCallbackInstance;
 
+	private PowerManager.WakeLock mWakeLock;
+
 	private void log(String TAG, String message) {
 		if (!mDebugMode)
 			return;
@@ -85,9 +88,12 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 			if (!prefs.getBoolean(Common.PREF_TAGLOST, true))
 				return;
 
-			XposedHelpers.callMethod(param.thisObject, "setTimeout",
-					Integer.parseInt(prefs.getString(Common.PREF_PRESENCE_CHECK_TIMEOUT,
-							"2000")));
+			/* The timeout is final in KitKat, no easy way to change it */
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
+				XposedHelpers.callMethod(param.thisObject, "setTimeout",
+						Integer.parseInt(prefs.getString(Common.PREF_PRESENCE_CHECK_TIMEOUT,
+								"2000")));
+			}
 		}
 
 		@Override
@@ -517,7 +523,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 					XposedBridge.log("Not hooking class .nxp.NativeNfcTag$PresenceCheckWatchdog");
 			}
 		}
-		
+
 		final int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		String keyguardPackageName;
 		if (currentapiVersion < android.os.Build.VERSION_CODES.KITKAT) {
@@ -526,7 +532,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 			keyguardPackageName = "com.android.keyguard";
 		}
 		if (lpparam.packageName.equals(keyguardPackageName)) {
-			
+
 			try {
 				String className;
 
@@ -640,6 +646,13 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 
 		mBroadcastReceiverRegistered = true;
 
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+			PowerManager mPM = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			mWakeLock = mPM.newWakeLock(PowerManager.FULL_WAKE_LOCK |
+					PowerManager.ACQUIRE_CAUSES_WAKEUP, 
+					"NFCUnlockerKeyguardWakeup");
+		}
+
 		BroadcastReceiver receiver = new BroadcastReceiver() {				
 			@Override
 			public void onReceive(Context context, Intent intent) {
@@ -654,6 +667,13 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 						if (mViewMediatorCallback != null) {
 							XposedHelpers.callMethod(mViewMediatorCallback,
 									"keyguardDone", true);
+						}
+
+						/* Wake up screen */
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+							mWakeLock.acquire();
+							if (mWakeLock != null && mWakeLock.isHeld())
+								mWakeLock.release();
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
