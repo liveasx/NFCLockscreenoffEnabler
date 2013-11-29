@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
 import android.app.Application;
 import android.app.Notification;
@@ -516,9 +517,16 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 					XposedBridge.log("Not hooking class .nxp.NativeNfcTag$PresenceCheckWatchdog");
 			}
 		}
-
-		if (lpparam.packageName.equals("android")) {
-			final int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		
+		final int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		String keyguardPackageName;
+		if (currentapiVersion < android.os.Build.VERSION_CODES.KITKAT) {
+			keyguardPackageName = "android";
+		} else {
+			keyguardPackageName = "com.android.keyguard";
+		}
+		if (lpparam.packageName.equals(keyguardPackageName)) {
+			
 			try {
 				String className;
 
@@ -621,6 +629,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 		}
 	}
 
+	@SuppressLint("NewApi")
 	private void registerNfcUnlockReceivers(Context context) {
 		if (context == null)
 			return;
