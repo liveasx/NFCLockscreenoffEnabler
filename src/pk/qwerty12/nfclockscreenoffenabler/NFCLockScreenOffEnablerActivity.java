@@ -141,6 +141,11 @@ public class NFCLockScreenOffEnablerActivity extends PreferenceActivity {
 				return true;
 			}
 		});
+		
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+			mPresenceCheckTimeoutPreference.setSummary(R.string.not_supported_yet_kitkat);
+			mPresenceCheckTimeoutPreference.setEnabled(false);
+		}
 
 		findPreference(Common.PREF_DEBUG_MODE).setOnPreferenceChangeListener(listener);
 		Preference authorizedNfcPreference = findPreference("nfc_tags");

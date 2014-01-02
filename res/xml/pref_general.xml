@@ -46,7 +46,7 @@
         android:summary="@string/pref_description_show_in_launcher"
         android:title="@string/pref_title_show_in_launcher" />
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="debug_mode"
         android:summary="@string/pref_description_debug_mode"
         android:title="@string/pref_title_debug_mode" />

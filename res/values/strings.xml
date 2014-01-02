@@ -22,14 +22,18 @@
         <item>MohammadAG</item>
         <item>sleavitt</item>
         <item>vrthe1</item>
+        <item>shantanugoel</item>
+        <item>ns130291</item>
     </string-array>
     
     <string-array name="contributors_how">
     	<item>Main developer</item>
     	<item>Tag lost support</item>
-    	<item>NFC Unlocking / Minor tweaks</item>    
+    	<item>NFC Unlocking / Maintainer</item>    
     	<item>TecTile and 4.1 support</item>
     	<item>HTC One support</item>
+    	<item>Basic KitKat support</item>
+    	<item>Support for more tags</item>
     </string-array>
     
 	<!-- Translators, add your names here so you're credited in the app -->
@@ -67,5 +71,6 @@
     <string name="undo">Undo</string>
     <string name="tag_unauthorized">Tag deauthorized</string>
     <string name="translators_title">Translators</string>
+    <string name="not_supported_yet_kitkat">Not yet supported on KitKat</string>
 
 </resources>

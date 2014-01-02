@@ -14,14 +14,16 @@
     <string name="pref_description_enable_tag_lost_detection">当NFC标签丢失时通知应用</string>
     <string name="pref_title_enable_nfc_for_lock_state">启用NFC，当</string>
     <string name="copyright_summary">版权所有 © 2012-2013 – qwerty12\n点击查看参与者</string>
-	<string name="xposed_description">当屏幕熄灭时启用NFC，并且使用NFC解锁你的设备。</string>
-    
+    <string name="xposed_description">当屏幕熄灭时启用NFC，并且使用NFC解锁你的设备。</string>
+
     <string-array name="contributors_how">
-    	<item>主要开发者</item>
-    	<item>标签丢失支持</item>
-    	<item>标签解锁/微调</item>    
-    	<item>TecTile和4.1支持</item>
-    	<item>HTC One支持</item>
+        <item>主要开发者</item>
+        <item>标签丢失支持</item>
+        <item>标签解锁/微调</item>
+        <item>TecTile和4.1支持</item>
+        <item>HTC One支持</item>
+        <item>Basic KitKat support</item>
+        <item>Support for more tags</item>
     </string-array>
 
     <string name="contributors_title">参与者</string>
@@ -52,5 +54,6 @@
     <string name="undo">撤销</string>
     <string name="tag_unauthorized">标签授权</string>
     <string name="translators_title">翻译者</string>
+    <string name="not_supported_yet_kitkat">Not yet supported on KitKat</string>
 
 </resources>
