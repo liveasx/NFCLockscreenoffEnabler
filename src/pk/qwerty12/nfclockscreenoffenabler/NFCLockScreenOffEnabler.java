@@ -162,6 +162,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 
 	//Hook for NfcService.onRemoteEndpointDiscovered(TagEndpoint tag)
 	class NfcServiceOnRemoteEndpointDiscoveredHook extends XC_MethodHook {
+		@SuppressLint("NewApi")
 		@Override
 		protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 			try {
