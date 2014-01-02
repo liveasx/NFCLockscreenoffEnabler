@@ -60,7 +60,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 
 	int mTagLostSound;
 
-	private boolean mDebugMode = true;
+	private boolean mDebugMode = false;
 	private static Set<String> mSoundsToPlayList;
 	protected Object mViewMediatorCallback;
 
@@ -199,7 +199,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 		prefs = AndroidAppHelper.getSharedPreferencesForPackage(MY_PACKAGE_NAME,
 				Common.PREFS, Context.MODE_PRIVATE);
 		MODULE_PATH = startupParam.modulePath;
-		mDebugMode = prefs.getBoolean(Common.PREF_DEBUG_MODE, true);
+		mDebugMode = prefs.getBoolean(Common.PREF_DEBUG_MODE, false);
 
 		try {
 			Class<?> ContextImpl = findClass("android.app.ContextImpl", null);
@@ -330,7 +330,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 							AndroidAppHelper.reloadSharedPreferencesIfNeeded(prefs);
 
 							// This may be faster than using prefs.getBoolean, since we use this a lot.
-							mDebugMode = prefs.getBoolean(Common.PREF_DEBUG_MODE, true);
+							mDebugMode = prefs.getBoolean(Common.PREF_DEBUG_MODE, false);
 							reloadSoundsToPlayList();
 						}
 					}, new IntentFilter(Common.SETTINGS_UPDATED_INTENT));
@@ -635,6 +635,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	private void registerNfcUnlockReceivers(Context context) {
 		if (context == null)
