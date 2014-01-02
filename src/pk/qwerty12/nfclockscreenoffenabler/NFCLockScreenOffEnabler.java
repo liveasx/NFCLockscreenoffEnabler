@@ -13,6 +13,7 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
 import android.app.Application;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -174,12 +175,20 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 					XposedBridge.log(uuidString.trim());
 
 				if (context != null) {
+					KeyguardManager kmgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 					Common.sendTagChangedBroadcast(context, uuid, true);
 
 					if (authorizedNfcTags != null && authorizedNfcTags.contains(uuidString.trim())) {
 						if (mDebugMode)
 							XposedBridge.log("Got matching NFC tag, unlocking device...");
-						context.sendBroadcast(new Intent(Common.INTENT_UNLOCK_DEVICE));
+						boolean isKeygaurdLocked;
+						if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+							isKeygaurdLocked = kmgr.isKeyguardLocked();
+						} else {
+							isKeygaurdLocked = kmgr.inKeyguardRestrictedInputMode();
+						}
+						if (isKeygaurdLocked)
+							context.sendBroadcast(new Intent(Common.INTENT_UNLOCK_DEVICE));
 					}
 
 					if (!prefs.getBoolean(Common.PREF_TAGLOST, true))
