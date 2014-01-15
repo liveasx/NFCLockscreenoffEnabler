@@ -13,35 +13,17 @@
     <string name="pref_description_play_tag_lost_sound">Phát âm thanh khi một nhãn NFC biến mất</string>
     <string name="pref_description_enable_tag_lost_detection">Thông báo cho các ứng dụng khác khi một nhãn NFC biến mất</string>
     <string name="pref_title_enable_nfc_for_lock_state">Bật NFC khi</string>
-    <string name="copyright_summary">Copyright © 2012-2013 – qwerty12\nChạm để xem thông tin người hỗ trợ.</string>
-        <string name="xposed_description">Bật NFC khi màn hình tắt, và dùng NFC để mở khoá thiết bị của bạn</string>
-    
-    <string-array name="contributors" translatable="false">
-        <item>qwerty12</item>
-        <item>madfish73</item>
-        <item>MohammadAG</item>
-        <item>sleavitt</item>
-        <item>vrthe1</item>
-        <item>shantanugoel</item>
-        <item>ns130291</item>
-    </string-array>
-    
+    <string name="copyright_summary">Copyright © 2012-2014 – qwerty12\nChạm để xem thông tin người hỗ trợ.</string>
+    <string name="xposed_description">Bật NFC khi màn hình tắt, và dùng NFC để mở khoá thiết bị của bạn</string>
+
     <string-array name="contributors_how">
-            <item>Tác giả chính</item>
-            <item>Hỗ trợ mất nhãn</item>
-            <item>Mở khoá bằng NFC / Duy trì</item>    
-            <item>Hỗ trợ TecTile và 4.1</item>
-            <item>Hỗ trợ HTC One</item>
-            <item>Hỗ trợ KitKat cơ bản</item>
-            <item>Hỗ trợ thêm nhiều loại nhãn</item>
-    </string-array>
-    
-        <!-- Translators, add your names here so you're credited in the app -->
-    <string-array name="translators" translatable="false">
-		<item>Alienz (Vietnamese / Tiếng Việt)</item>
-        <item>qhq (Current Chinese / 汉语)</item>
-        <item>liveasx (Previous Chinese / 汉语)</item>
-        <item>etatto (French / Français)</item>
+        <item>Tác giả chính</item>
+        <item>Hỗ trợ mất nhãn</item>
+        <item>Mở khoá bằng NFC / Duy trì</item>
+        <item>Hỗ trợ TecTile và 4.1</item>
+        <item>Hỗ trợ HTC One</item>
+        <item>Hỗ trợ KitKat cơ bản</item>
+        <item>Hỗ trợ thêm nhiều loại nhãn</item>
     </string-array>
 
     <string name="contributors_title">Những người hỗ trợ</string>
