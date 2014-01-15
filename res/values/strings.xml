@@ -13,7 +13,7 @@
     <string name="pref_description_play_tag_lost_sound">Play a sound when an NFC tag is lost</string>
     <string name="pref_description_enable_tag_lost_detection">Notify applications when an NFC tag is lost</string>
     <string name="pref_title_enable_nfc_for_lock_state">Enable NFC when</string>
-    <string name="copyright_summary">Copyright © 2012-2013 – qwerty12\nClick for contributors.</string>
+    <string name="copyright_summary">Copyright © 2012-2014 – qwerty12\nClick for contributors.</string>
 	<string name="xposed_description">Enable NFC when the screen is off, and use NFC to unlock your device</string>
     
     <string-array name="contributors" translatable="false">
@@ -41,6 +41,7 @@
         <item>qhq (Current Chinese / 汉语)</item>
         <item>liveasx (Previous Chinese / 汉语)</item>
         <item>etatto (French / Français)</item>
+        <item>Alienz (Vietnamese / Tiếng Việt)</item>
     </string-array>
 
     <string name="contributors_title">Contributors</string>
