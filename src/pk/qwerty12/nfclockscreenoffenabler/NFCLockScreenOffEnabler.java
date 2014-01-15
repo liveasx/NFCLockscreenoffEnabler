@@ -177,6 +177,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 
 				if (context != null) {
 					KeyguardManager kmgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+					PowerManager pwrmgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 					Common.sendTagChangedBroadcast(context, uuid, true);
 
 					if (authorizedNfcTags != null && authorizedNfcTags.contains(uuidString.trim())) {
@@ -188,7 +189,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 						} else {
 							isKeygaurdLocked = kmgr.inKeyguardRestrictedInputMode();
 						}
-						if (isKeygaurdLocked)
+						if (isKeygaurdLocked || !pwrmgr.isScreenOn())
 							context.sendBroadcast(new Intent(Common.INTENT_UNLOCK_DEVICE));
 					}
 
