@@ -16,16 +16,6 @@
     <string name="copyright_summary">Copyright © 2012-2014 – qwerty12\nClick for contributors.</string>
 	<string name="xposed_description">Enable NFC when the screen is off, and use NFC to unlock your device</string>
     
-    <string-array name="contributors" translatable="false">
-        <item>qwerty12</item>
-        <item>madfish73</item>
-        <item>MohammadAG</item>
-        <item>sleavitt</item>
-        <item>vrthe1</item>
-        <item>shantanugoel</item>
-        <item>ns130291</item>
-    </string-array>
-    
     <string-array name="contributors_how">
     	<item>Main developer</item>
     	<item>Tag lost support</item>
@@ -34,14 +24,6 @@
     	<item>HTC One support</item>
     	<item>Basic KitKat support</item>
     	<item>Support for more tags</item>
-    </string-array>
-    
-	<!-- Translators, add your names here so you're credited in the app -->
-    <string-array name="translators" translatable="false">
-        <item>qhq (Current Chinese / 汉语)</item>
-        <item>liveasx (Previous Chinese / 汉语)</item>
-        <item>etatto (French / Français)</item>
-        <item>Alienz (Vietnamese / Tiếng Việt)</item>
     </string-array>
 
     <string name="contributors_title">Contributors</string>
