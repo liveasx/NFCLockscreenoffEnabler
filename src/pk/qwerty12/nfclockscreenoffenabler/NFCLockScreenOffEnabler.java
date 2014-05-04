@@ -5,7 +5,6 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,8 +13,6 @@ import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
 import android.app.Application;
 import android.app.KeyguardManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +25,6 @@ import android.media.SoundPool;
 import android.nfc.NfcAdapter;
 import android.os.PowerManager;
 import android.util.Log;
-import de.robv.android.xposed.IXposedHookCmdInit;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
@@ -37,7 +33,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.XposedHelpers.ClassNotFoundError;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
-public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookCmdInit {
+public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHookLoadPackage {
 	// Thanks to Tungstwenty for the preferences code, which I have taken from his Keyboard42DictInjector and made a bad job of it
 	private static final String MY_PACKAGE_NAME = NFCLockScreenOffEnabler.class.getPackage().getName();
 	private String MODULE_PATH;
@@ -211,67 +207,6 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 				Common.PREFS, Context.MODE_PRIVATE);
 		MODULE_PATH = startupParam.modulePath;
 		mDebugMode = prefs.getBoolean(Common.PREF_DEBUG_MODE, false);
-
-		try {
-			Class<?> ContextImpl = findClass("android.app.ContextImpl", null);
-
-			XC_MethodHook hook = new XC_MethodHook() {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					// ContextImpl extends Context
-					Context context = (Context) param.thisObject;
-					Intent intent = (Intent) param.args[0];
-					if (context != null) {
-						if (intent != null && Common.INTENT_UNLOCK_DEVICE.equals(intent.getAction())) {
-							if (!context.getPackageName().equals(Common.PACKAGE_NFC)) {
-								param.args[0] = new Intent(Common.INTENT_UNLOCK_INTERCEPTED);
-							}
-						}
-					}
-				}
-			};
-
-			try {
-				findAndHookMethod(ContextImpl, "sendBroadcast", Intent.class, hook);
-				findAndHookMethod(ContextImpl, "sendBroadcast", Intent.class, String.class, hook);
-			} catch (NoSuchMethodError e) {}
-
-			// Doesn't exist on pre-4.2
-			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-			if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-				try {
-					Class<?> UserHandle = findClass("android.os.UserHandle", null);
-
-					if (UserHandle != null) {
-						try {
-							findAndHookMethod(ContextImpl, "sendBroadcastAsUser", Intent.class, UserHandle, hook);
-							findAndHookMethod(ContextImpl, "sendBroadcastAsUser", Intent.class, UserHandle, String.class, hook);
-						} catch (NoSuchMethodError e) {}
-					}
-				} catch (ClassNotFoundError e) {}
-			}
-		} catch (ClassNotFoundError e) {}
-	}
-
-	@Override
-	public void initCmdApp(de.robv.android.xposed.IXposedHookCmdInit.StartupParam startupParam) 
-			throws Throwable {
-		if (!startupParam.startClassName.equals("com.android.commands.am.Am"))
-			return;
-
-		Class<?> Am = findClass("com.android.commands.am.Am", null);
-		Method sendBroadcastMethod = null;
-		try {
-			sendBroadcastMethod = XposedHelpers.findMethodBestMatch(Am, "makeIntent", int.class);
-		} catch (NoSuchMethodError e) {
-			try {
-				sendBroadcastMethod = XposedHelpers.findMethodBestMatch(Am, "makeIntent");
-			} catch (NoSuchMethodError e1) {}
-		}
-
-		if (sendBroadcastMethod != null) {
-			XposedBridge.hookMethod(sendBroadcastMethod, new AmInterceptHook());
-		}
 	}
 
 	public void playTagLostSound() {
@@ -708,25 +643,11 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else if (Common.INTENT_UNLOCK_INTERCEPTED.equals(intent.getAction())) {
-					String notificationText = "An attempt to use an intent used by NFC unlocking to unlock your device has been prevented";
-					Notification.Builder mBuilder = new Notification.Builder(context)
-					.setSmallIcon(android.R.drawable.ic_dialog_alert)
-					.setContentTitle("Unlock attempt intercepted")
-					.setContentText(notificationText)
-					.setAutoCancel(true);
-					/* We don't have the support library, and the message barely fits on most devices */
-					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-						mBuilder.setStyle(new Notification.BigTextStyle().bigText(notificationText));
-					}
-					NotificationManager mNotificationManager =
-							(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-					mNotificationManager.notify(0, mBuilder.build());
 				}
 			}
 		};
 
-		context.registerReceiver(receiver, new IntentFilter(Common.INTENT_UNLOCK_DEVICE));
-		context.registerReceiver(receiver, new IntentFilter(Common.INTENT_UNLOCK_INTERCEPTED));
+		context.registerReceiver(receiver, new IntentFilter(Common.INTENT_UNLOCK_DEVICE),
+				"com.android.permission.HANDOVER_STATUS", null);
 	}
 }
