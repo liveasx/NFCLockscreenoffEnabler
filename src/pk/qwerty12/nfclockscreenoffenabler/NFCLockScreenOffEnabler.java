@@ -629,16 +629,24 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 		 * for the patch.
 		 */
 		if (lpparam.packageName.equals("com.htc.lockscreen") && !mBroadcastReceiverRegistered) {
-			Class<?> ClassToHook = findClass(
-					"com.htc.lockscreen.HtcKeyguardHostViewImpl",
-					lpparam.classLoader);
+			String className = "com.htc.lockscreen.HtcKeyguardHostViewImpl";
+			if (currentapiVersion >= android.os.Build.VERSION_CODES.KITKAT) {
+				className = "com.htc.lockscreen.keyguard.KeyguardHostView";
+			}
+			Class<?> ClassToHook = findClass(className, lpparam.classLoader);
 			XposedBridge.hookAllConstructors(ClassToHook, new XC_MethodHook() {
 				@Override
 				protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 					try {
 						mKeyguardSecurityCallbackInstance = getObjectField(
 								param.thisObject, "mSecurityCallback");
-					} catch (NoSuchFieldError e) {}
+					} catch (NoSuchFieldError e) {
+						try {
+							mKeyguardSecurityCallbackInstance = getObjectField(param.thisObject, "mCallback");
+						} catch (NoSuchFieldError e1) {
+							XposedBridge.log("All attempts to get callback failed");
+						}
+					}
 					Context context = (Context) param.args[0];
 					registerNfcUnlockReceivers(context);
 				}
@@ -666,6 +674,7 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 		}
 
 		BroadcastReceiver receiver = new BroadcastReceiver() {				
+			@SuppressLint("Wakelock")
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				if (Common.INTENT_UNLOCK_DEVICE.equals(intent.getAction())) {
@@ -674,11 +683,20 @@ public class NFCLockScreenOffEnabler implements IXposedHookZygoteInit, IXposedHo
 						if (mKeyguardSecurityCallbackInstance != null) {
 							XposedHelpers.callMethod(mKeyguardSecurityCallbackInstance,
 									"reportSuccessfulUnlockAttempt");
+
+							try {
+								XposedHelpers.callMethod(mKeyguardSecurityCallbackInstance, "dismiss", true);
+							} catch (NoSuchMethodError e) {
+								e.printStackTrace();
+							}
 						}
 
 						if (mViewMediatorCallback != null) {
-							XposedHelpers.callMethod(mViewMediatorCallback,
-									"keyguardDone", true);
+							try {
+								XposedHelpers.callMethod(mViewMediatorCallback, "keyguardDone", true);
+							} catch (NoSuchMethodError e) {
+								e.printStackTrace();
+							}
 						}
 
 						/* Wake up screen */
